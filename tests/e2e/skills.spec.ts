@@ -4,6 +4,9 @@ import { skillGroups } from '../../src/content/skills';
 import { pick, type Lang } from '../../src/lib/i18n';
 import { revealAll } from './helpers';
 
+// axe measures colors, so check the final state, not a frame in the middle of a reveal animation
+test.use({ reducedMotion: 'reduce' });
+
 for (const [lang, route] of [
   ['en', '/'],
   ['fa', '/fa/'],

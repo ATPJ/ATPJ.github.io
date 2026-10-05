@@ -7,6 +7,7 @@ import '@fontsource/ibm-plex-sans/latin-600.css';
 import '@fontsource-variable/vazirmatn/wght.css';
 import '../styles/base.css';
 import '../styles/terminal.css';
+import '../styles/hero.css';
 import '../styles/motion.css';
 import monoFont from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url';
 import Nav from '../components/Nav.astro';
@@ -60,13 +61,17 @@ const ogImage = new URL(url('og.png'), origin).href;
     </script>
   </head>
   <body>
+    <div class="cur-ring" aria-hidden="true"></div>
     <a class="skip" href="#about">{s.skip}</a>
     <Nav lang={lang} />
     <main>
       <slot />
     </main>
     <footer class="foot">
-      <div class="wrap">{s.footer}</div>
+      <div class="wrap">
+        <p class="foot-mark ltr" aria-hidden="true">ATPJ</p>
+        {s.footer}
+      </div>
     </footer>
     <script>
       import '../scripts/main';

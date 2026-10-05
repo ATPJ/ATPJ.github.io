@@ -55,7 +55,7 @@
 
 /* ---------- sections ---------- */
 .section { padding-block: var(--s-7); border-top: 1px solid var(--border); }
-.hero { padding-block: var(--s-6) var(--s-7); border-top: 0; }
+.hero { border-top: 0; }
 
 .sec-head { margin-bottom: var(--s-5); }
 .cmd { color: var(--muted); font-size: var(--fs-sm); margin-bottom: var(--s-1); }
@@ -254,55 +254,9 @@
 .bar nav ul { position: relative; }
 
 /* ---------- personal brand layer: sticker / hard-shadow look ---------- */
-.hero-grid { display: grid; gap: var(--s-6); align-items: center; }
-@media (min-width: 56rem) { .hero-grid { grid-template-columns: 1.1fr 0.9fr; } }
-.whoami { margin: 0; padding: 0; border: 0; }
-.snippet { font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s-3); }
-.snippet .kw { color: var(--c-ai); }
-.snippet .fn { color: var(--brand); }
-.wordmark {
-  font-size: clamp(4.5rem, 3rem + 13vw, 10rem);
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.05em;
-  color: var(--brand);
-  text-shadow: 0.05em 0.05em 0 var(--c-automation);
-  transition: text-shadow var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out);
-}
-.wordmark:hover { text-shadow: 0.09em 0.09em 0 var(--c-automation); transform: translate(-0.02em, -0.02em); }
-.cta {
-  display: inline-block;
-  margin-top: var(--s-5);
-  padding: 0.6rem 1.1rem;
-  background: var(--brand);
-  color: var(--bg);
-  font-weight: 700;
-  text-decoration: none;
-  border: 2px solid var(--text-strong);
-  box-shadow: 4px 4px 0 var(--text-strong);
-  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out);
-}
-.cta:hover { color: var(--bg); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--text-strong); }
-.hero-card { position: relative; transform: rotate(1.5deg); }
-.hero-card .term { border: 2px solid var(--text-strong); box-shadow: 8px 8px 0 var(--c-infra); }
-.sticker {
-  position: absolute;
-  top: -0.9rem;
-  inset-inline-end: -0.5rem;
-  z-index: 1;
-  padding: 0.25rem 0.7rem;
-  background: var(--c-automation);
-  color: var(--bg);
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  border-radius: 999px;
-  transform: rotate(-6deg);
-}
-.hero .prompt-line { margin-top: var(--s-3); }
 /* cards across the page share the hard-shadow language */
 .group { border: 2px solid var(--border-strong); box-shadow: 5px 5px 0 var(--border); }
 .sec-head h2 { text-decoration: underline wavy var(--brand) 2px; text-underline-offset: 0.3em; text-decoration-skip-ink: none; }
-@media (prefers-reduced-motion: reduce) { .hero-card { transform: none; } }
 
 /* ---------- RTL fixes ---------- */
 /* wrapped latin names in the skills table hug the same edge as the Persian text */
@@ -321,7 +275,7 @@
 .trait:nth-child(1) { --c: var(--brand); }
 .trait:nth-child(2) { --c: var(--c-infra); }
 .trait:nth-child(3) { --c: var(--c-automation); }
-.trait:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--c); }
+.trait:hover { box-shadow: 9px 9px 0 var(--c); }
 .trait .num { display: block; font-size: var(--fs-xs); font-weight: 700; color: var(--c); margin-bottom: var(--s-3); }
 .trait h3 { font-size: var(--fs-lg); color: var(--text-strong); margin-bottom: var(--s-3); }
 .trait p { line-height: 1.75; }

@@ -1,0 +1,171 @@
+/* Hero: full-screen stage. Pointer position (--mx/--my, -0.5..0.5, set by fx.ts) drives the parallax. */
+.hero {
+  position: relative;
+  min-height: calc(100svh - 2.75rem);
+  display: grid;
+  align-items: center;
+  padding-block: var(--s-6) var(--s-8);
+  overflow: hidden;
+  isolation: isolate;
+}
+.whoami { margin: 0; padding: 0; border: 0; }
+.hero-grid { display: grid; gap: var(--s-6); align-items: center; }
+@media (min-width: 56rem) { .hero-grid { grid-template-columns: 1.05fr 0.95fr; } }
+
+/* giant outlined glyph behind everything */
+.giant {
+  position: absolute;
+  z-index: -1;
+  inset-inline-start: -2vw;
+  top: 50%;
+  translate: 0 -50%;
+  font-size: clamp(14rem, 42vw, 40rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.08em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(255 255 255 / 0.07);
+  user-select: none;
+  transform: translate3d(calc(var(--mx, 0) * 28px), calc(var(--my, 0) * 28px), 0);
+}
+
+.snippet { font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s-3); opacity: 0; animation: fade 900ms 100ms var(--ease-io) forwards; }
+.snippet .kw { color: var(--c-ai); }
+.snippet .fn { color: var(--brand); }
+
+/* wordmark slides up out of a mask */
+.wordmark {
+  font-size: clamp(4.5rem, 3rem + 13vw, 10rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--brand);
+  text-shadow: 0.05em 0.05em 0 var(--c-automation);
+}
+.wordmark .ln { display: block; overflow: hidden; padding: 0.06em 0.12em 0.14em 0; margin: -0.06em 0 -0.14em; }
+.wordmark .ln > span { display: inline-block; transform: translateY(115%); animation: up 1100ms var(--ease-io) 150ms forwards; }
+@keyframes up { to { transform: none; } }
+@keyframes fade { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* role with a hand-drawn underline that draws itself */
+.role { position: relative; display: inline-block; margin-top: var(--s-3); font-size: var(--fs-lg); color: var(--text); opacity: 0; animation: fade 900ms 450ms var(--ease-io) forwards; }
+.scrawl { position: absolute; inset-inline: -2%; bottom: -0.45em; width: 104%; height: 0.4em; overflow: visible; }
+.scrawl path { fill: none; stroke: var(--brand); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 340; stroke-dashoffset: 340; animation: draw 1000ms 1000ms var(--ease-io) forwards; vector-effect: non-scaling-stroke; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.tagline { margin-top: var(--s-5); font-size: var(--fs-md); line-height: 1.8; opacity: 0; animation: fade 900ms 650ms var(--ease-io) forwards; }
+
+.ctas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-5); margin-top: var(--s-5); opacity: 0; animation: fade 900ms 850ms var(--ease-io) forwards; }
+.cta {
+  display: inline-block;
+  padding: 0.7rem 1.3rem;
+  background: var(--brand);
+  color: var(--bg);
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--text-strong);
+  box-shadow: 4px 4px 0 var(--text-strong);
+  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out), background-color var(--t-base);
+}
+.cta:hover { color: var(--bg); background: var(--c-automation); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--text-strong); }
+.ghost { color: var(--text); text-decoration: none; border-bottom: 1px dashed var(--muted); padding-block: 0.4rem; transition: color var(--t-fast), border-color var(--t-fast); }
+.ghost:hover { color: var(--brand); border-color: var(--brand); }
+
+/* ---------- stage: character + terminal ---------- */
+.stage { position: relative; justify-self: center; width: min(100%, 31rem); }
+.char-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  transform: perspective(900px) rotateY(calc(var(--mx, 0) * -10deg)) rotateX(calc(var(--my, 0) * 8deg));
+  transition: transform 200ms ease-out;
+}
+.char-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--brand) 30%, transparent), transparent);
+  filter: blur(24px);
+  animation: glow 5s ease-in-out infinite;
+}
+@keyframes glow { 50% { opacity: 0.45; transform: scale(1.15); } }
+.char {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  /* white die-cut outline + hard shadow */
+  filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
+    drop-shadow(7px 10px 0 rgb(0 0 0 / 0.45));
+  opacity: 0;
+  animation:
+    pop 900ms 300ms cubic-bezier(0.3, 1.5, 0.5, 1) forwards,
+    breathe 6s 1.4s ease-in-out infinite;
+}
+@keyframes pop { from { opacity: 0; transform: scale(0.55) rotate(-14deg) translateY(40px); } to { opacity: 1; transform: none; } }
+@keyframes breathe { 50% { transform: scale(1.025) translateY(-8px) rotate(0.8deg); } }
+.char:hover { animation: wiggle 700ms ease-in-out; opacity: 1; }
+@keyframes wiggle {
+  20% { transform: rotate(-5deg) scale(1.06) translateY(-10px); }
+  45% { transform: rotate(4deg) scale(1.08) translateY(-14px); }
+  70% { transform: rotate(-2deg) scale(1.04) translateY(-6px); }
+}
+.char.squish { animation: squish 450ms var(--ease-io); opacity: 1; }
+@keyframes squish { 30% { transform: scale(0.92, 1.08); } 60% { transform: scale(1.06, 0.94) rotate(-1deg); } }
+
+.sticker {
+  position: absolute;
+  z-index: 2;
+  top: 6%;
+  inset-inline-end: 2%;
+  padding: 0.3rem 0.8rem;
+  background: var(--c-automation);
+  color: var(--bg);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  border-radius: 999px;
+  rotate: -10deg;
+  opacity: 0;
+  scale: 2.6;
+  animation: stamp 500ms 1500ms cubic-bezier(0.3, 1.6, 0.5, 1) forwards;
+}
+@keyframes stamp { to { opacity: 1; scale: 1; } }
+
+.hero-card { position: relative; z-index: 3; margin-top: calc(var(--s-6) * -1); }
+@media (min-width: 56rem) {
+  .hero-card { position: absolute; inset-inline-start: -16%; bottom: -6%; width: 62%; margin: 0; rotate: -2deg; }
+}
+.hero-card .term { border: 2px solid var(--text-strong); box-shadow: 6px 6px 0 var(--c-infra); }
+.hero-card .term-body { padding: var(--s-4); }
+.hero-card .log { font-size: var(--fs-xs); line-height: 1.65; }
+.hero-card .log li { opacity: 0; animation: fade 500ms forwards; animation-delay: calc(1.6s + var(--k, 0) * 260ms); }
+.hero-card .log li:has(.tag) { display: none; } /* only the commands: keeps the card short so the character's face stays clear */
+.hero-card .prompt-line { margin-top: var(--s-2); font-size: var(--fs-xs); }
+
+/* scroll hint: a line that drips downward */
+.scroll {
+  position: absolute;
+  inset-inline-start: var(--gutter);
+  bottom: var(--s-5);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.scroll i { width: 1px; height: 46px; background: linear-gradient(var(--text-strong) 50%, transparent 0) 0 0 / 1px 200%; animation: drip 1.6s linear infinite; }
+@keyframes drip { to { background-position: 0 -92px; } }
+@media (max-width: 55.99rem) { .scroll { display: none; } .hero { padding-block: var(--s-6); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .snippet, .role, .tagline, .ctas, .char, .sticker, .hero-card .log li { opacity: 1 !important; animation: none !important; scale: 1; }
+  .wordmark .ln > span { transform: none; animation: none; }
+  .scrawl path { stroke-dashoffset: 0; animation: none; }
+  .char-wrap, .giant { transform: none; }
+  .char-wrap::before, .scroll i { animation: none; }
+}
+
+/* Persian page: code snippet hugs the same edge as the text; terminal prompt stays left */
+[dir='rtl'] .snippet { text-align: right; }
+.hero-card .prompt-line { text-align: left !important; }

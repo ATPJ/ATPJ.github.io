@@ -1,7 +1,7 @@
 ---
 import TerminalWindow from './TerminalWindow.astro';
 import { profile } from '../content/profile';
-import { pick, type Lang } from '../lib/i18n';
+import { pick, url, type Lang } from '../lib/i18n';
 
 interface Props {
   lang: Lang;
@@ -10,7 +10,7 @@ const { lang } = Astro.props;
 
 // Illustrative deploy log. Every line describes something the developer really does
 // (Git deploys, Docker, Nginx reverse proxy, Cloudflare origin certificate and CDN).
-// It is decoration for assistive tech (aria-hidden); the identity block below is the real content.
+// It is decoration for assistive tech (aria-hidden); the identity block is the real content.
 const lines = [
   { cmd: 'git pull origin main' },
   { out: 'source synced from the repository' },
@@ -25,40 +25,54 @@ const lines = [
 ---
 
 <section id="hero" class="hero" data-section data-revealed="false" aria-labelledby="hero-title">
+  <span class="giant ltr" aria-hidden="true">&lt;/&gt;</span>
   <div class="wrap hero-grid">
-    <div class="whoami" data-r style="--i:0">
+    <div class="whoami">
       <p class="snippet ltr" aria-hidden="true"><span class="kw">fn</span> main() &#123; <span class="fn">build</span>(); <span class="fn">automate</span>(); <span class="fn">ship</span>(); &#125;</p>
-      <h1 id="hero-title" class="wordmark" data-text={profile.handle}>{profile.handle}</h1>
-      <p class="role">{pick(profile.role, lang)}</p>
+      <h1 id="hero-title" class="wordmark"><span class="ln"><span data-scramble>{profile.handle}</span></span></h1>
+      <p class="role">
+        {pick(profile.role, lang)}
+        <svg class="scrawl" viewBox="0 0 300 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8 C 40 2, 70 12, 110 6 S 190 2, 230 7 S 280 9, 298 4"></path></svg>
+      </p>
       <p class="tagline prose">{pick(profile.tagline, lang)}</p>
-      <a class="cta" href="#projects">{lang === 'fa' ? 'پروژه‌ها ←' : 'see the work →'}</a>
+      <div class="ctas">
+        <a class="cta" href="#projects">{lang === 'fa' ? 'پروژه‌ها ←' : 'see the work →'}</a>
+        <a class="ghost" href="#contact">{lang === 'fa' ? 'ارتباط با من' : 'get in touch'}</a>
+      </div>
     </div>
-    <div class="hero-card" data-r style="--i:1">
-      <span class="sticker" aria-hidden="true">LLM + Docker</span>
-      <TerminalWindow title="atpj@portfolio:~/deploy">
-        <ol class="log ltr" aria-hidden="true">
-          {
-            lines.map((l) => (
-              <li>
-                {'cmd' in l ? (
-                  <>
-                    <span class="ps1">$</span>
-                    <span class="cmd-line">{l.cmd}</span>
-                  </>
-                ) : (
-                  <>
-                    <span class="tag">
-                      <span class="ok">ok</span>
-                    </span>
-                    <span class="out">{l.out}</span>
-                  </>
-                )}
-              </li>
-            ))
-          }
-        </ol>
-        <p class="prompt-line ltr" aria-hidden="true"><span class="ps1">$</span><span class="cursor"></span></p>
-      </TerminalWindow>
+
+    <div class="stage">
+      <div class="char-wrap">
+        <span class="sticker" aria-hidden="true">LLM + Docker</span>
+        <img class="char" src={url('character.svg')} alt="" width="1024" height="1024" />
+      </div>
+      <div class="hero-card">
+        <TerminalWindow title="atpj@portfolio:~/deploy">
+          <ol class="log ltr" aria-hidden="true">
+            {
+              lines.map((l, k) => (
+                <li style={`--k:${k}`}>
+                  {'cmd' in l ? (
+                    <>
+                      <span class="ps1">$</span>
+                      <span class="cmd-line">{l.cmd}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span class="tag">
+                        <span class="ok">ok</span>
+                      </span>
+                      <span class="out">{l.out}</span>
+                    </>
+                  )}
+                </li>
+              ))
+            }
+          </ol>
+          <p class="prompt-line ltr" aria-hidden="true"><span class="ps1">$</span><span class="cursor"></span></p>
+        </TerminalWindow>
+      </div>
     </div>
   </div>
+  <div class="scroll ltr" aria-hidden="true"><i></i>scroll</div>
 </section>

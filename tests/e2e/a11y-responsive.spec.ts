@@ -2,6 +2,9 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { revealAll } from './helpers';
 
+// axe measures colors, so check the final state, not a frame in the middle of a reveal animation
+test.use({ reducedMotion: 'reduce' });
+
 for (const route of ['/', '/fa/']) {
   test(`no accessibility violations on ${route}`, async ({ page }) => {
     await page.goto(route);
