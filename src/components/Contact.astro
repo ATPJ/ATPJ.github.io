@@ -1,0 +1,53 @@
+---
+import SectionHead from './SectionHead.astro';
+import { profile, email } from '../content/profile';
+import { strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = strings[lang];
+
+// show a readable address instead of the raw url
+const display = (u: string) => u.replace(/^(https?:\/\/|mailto:)/, '').replace(/\/$/, '');
+---
+
+<section id="contact" class="section" data-section data-revealed="false" aria-labelledby="contact-title">
+  <div class="wrap">
+    <SectionHead id="contact-title" command="ssh atpj@contact" title={s.contact.title} />
+
+    <p class="ssh ltr" data-r style="--i:1" aria-hidden="true">
+      connecting to atpj … <span class="tag"><span class="ok">connected</span></span>
+    </p>
+    <p class="contact-intro prose" data-r style="--i:2">{s.contact.intro}</p>
+
+    <ul class="links">
+      {
+        profile.links.map((l, i) => (
+          <li data-r style={`--i:${i + 3}`}>
+            <span class="k ltr">{l.label}</span>
+            <span class="v ltr">
+              {l.url ? <a id={`link-${l.kind}`} href={l.url} {...(l.kind !== 'email' && { rel: 'me noopener' })}>{display(l.url)}</a> : null}
+              {l.kind === 'email' && (
+                <button
+                  type="button"
+                  class="copy"
+                  data-copy={email}
+                  data-select="#link-email"
+                  data-ok={s.contact.copied}
+                  data-fail={s.contact.copyFailed}
+                >
+                  {s.contact.copy}
+                </button>
+              )}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+    <span class="copy-status" role="status" aria-live="polite" data-copy-status></span>
+
+    <p class="contact-prompt ltr" aria-hidden="true" data-r style="--i:7"><span class="ps1">$</span><span class="cursor"></span></p>
+  </div>
+</section>

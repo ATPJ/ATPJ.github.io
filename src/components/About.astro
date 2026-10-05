@@ -1,0 +1,19 @@
+---
+import SectionHead from './SectionHead.astro';
+import { profile } from '../content/profile';
+import { pick, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<section id="about" class="section" data-section data-revealed="false" aria-labelledby="about-title">
+  <div class="wrap">
+    <SectionHead id="about-title" command="cat about.md" title={strings[lang].about.title} />
+    <div class="about-text prose">
+      {profile.about.map((p, i) => <p data-r style={`--i:${i + 1}`}>{pick(p, lang)}</p>)}
+    </div>
+  </div>
+</section>

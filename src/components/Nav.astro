@@ -1,0 +1,46 @@
+---
+import { strings, url, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = strings[lang];
+
+// order here is the real order of the sections on the page
+const items = [
+  ['hero', 'home'],
+  ['about', 'about'],
+  ['skills', 'skills'],
+  ['projects', 'projects'],
+  ['soft-skills', 'style'],
+  ['contact', 'contact'],
+] as const;
+
+const other: Lang = lang === 'en' ? 'fa' : 'en';
+const switchHref = lang === 'en' ? url('fa/') : url('');
+---
+
+<header class="bar">
+  <div class="bar-in">
+    <span class="session" aria-hidden="true">[atpj]</span>
+    <nav data-nav aria-label={s.nav.label}>
+      <ul>
+        {
+          items.map(([id, key], i) => (
+            <li>
+              <a href={`#${id}`}>
+                <span class="idx" aria-hidden="true">{i}</span>
+                <span class="sep" aria-hidden="true">:</span>
+                <span>{s.nav[key]}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <a class="lang" href={switchHref} hreflang={other} lang={other} data-lang-switch={other} aria-label={s.langSwitch.aria}>
+      {s.langSwitch.label}
+    </a>
+  </div>
+</header>

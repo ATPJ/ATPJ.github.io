@@ -1,0 +1,28 @@
+---
+import { skillGroups } from '../content/skills';
+import { pick, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// every skill once, tagged with its category colour
+const seen = new Set<string>();
+const skills = skillGroups
+  .flatMap((g) => g.items)
+  .filter((it) => !seen.has(it.name.en) && seen.add(it.name.en));
+---
+
+<!-- decorative: the same skills are listed in full in the Skills section -->
+<div class="strip-wrap" aria-hidden="true"><div class="strip">
+  {
+    [0, 1].map(() => (
+      <ul class="strip-track ltr">
+        {skills.map((it) => (
+          <li style={`--c:var(--c-${it.category})`}>{pick(it.name, lang)}</li>
+        ))}
+      </ul>
+    ))
+  }
+</div></div>

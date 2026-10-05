@@ -1,0 +1,70 @@
+/*
+ * Design tokens. One place to change the look.
+ * Direction: a live view of a server the developer operates.
+ * Palette: ink-teal background, warm bone text, one hue per skill category
+ * (same logic as syntax highlighting). No glow, no gradients, no neon.
+ */
+:root {
+  /* surfaces */
+  --bg: #0b1215;
+  --surface: #101a1f;
+  --surface-2: #15232a;
+  --border: #243640;
+  --border-strong: #35505c;
+
+  /* text (contrast on --bg: text 13.5:1, muted 5.9:1) */
+  --text: #d9e2e6;
+  --text-strong: #f3f7f8;
+  --muted: #8399a3;
+
+  /* skill categories */
+  --c-language: #e3b341;
+  --c-framework: #6cb6ff;
+  --c-ai: #b392f0;
+  --c-automation: #ff9e7a;
+  --c-infra: #4fd1c5;
+  --c-data: #f08fb0;
+  --brand: #ffd23f;
+
+  /* terminal semantics */
+  --c-prompt: #7ee787;
+  --c-ok: #7ee787;
+  --c-info: #6cb6ff;
+  --c-warn: #e3b341;
+  --c-err: #ff7b72;
+
+  /* type */
+  --font-mono: 'JetBrains Mono', 'Vazirmatn Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-prose: 'IBM Plex Sans', 'Vazirmatn Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-xs: 0.78rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: clamp(1.6rem, 1.1rem + 2.2vw, 2.5rem);
+  --fs-hero: clamp(1.9rem, 1.2rem + 3.6vw, 3.6rem);
+
+  /* space */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2.5rem;
+  --s-7: 4rem;
+  --s-8: 7rem;
+
+  --radius: 4px;
+  --measure: 68ch;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --wrap: 62rem;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 150ms;
+  --t-base: 240ms;
+  --t-slow: 560ms;
+}
+
+[lang='fa'] {
+  --font-prose: 'Vazirmatn Variable', 'IBM Plex Sans', system-ui, sans-serif;
+}

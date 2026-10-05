@@ -1,0 +1,75 @@
+---
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '@fontsource/jetbrains-mono/latin-700.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-600.css';
+import '@fontsource-variable/vazirmatn/wght.css';
+import '../styles/base.css';
+import '../styles/terminal.css';
+import '../styles/motion.css';
+import monoFont from '@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url';
+import Nav from '../components/Nav.astro';
+import { strings, url, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = strings[lang];
+
+const origin = Astro.site ?? new URL('https://atpj.github.io');
+const enUrl = new URL(url(''), origin).href;
+const faUrl = new URL(url('fa/'), origin).href;
+const self = lang === 'en' ? enUrl : faUrl;
+const ogImage = new URL(url('og.png'), origin).href;
+---
+
+<!doctype html>
+<html lang={s.htmlLang} dir={s.dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{s.siteTitle}</title>
+    <meta name="description" content={s.siteDescription} />
+    <meta name="theme-color" content="#0b1215" />
+    <link rel="canonical" href={self} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="fa" href={faUrl} />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={s.siteTitle} />
+    <meta property="og:description" content={s.siteDescription} />
+    <meta property="og:url" content={self} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href={monoFont} as="font" type="font/woff2" crossorigin />
+    <!-- Runs before paint: enables the JS-only hidden states, and sends first-time Persian-language
+         visitors from / to /fa/ unless they already chose a language. -->
+    <script is:inline data-fa={url('fa/')}>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (d.lang !== 'en') return;
+        var fa = document.currentScript.dataset.fa;
+        var stored = null;
+        try { stored = localStorage.getItem('lang'); } catch (e) {}
+        var prefersFa = /^fa/i.test(navigator.language || '');
+        if (stored === 'fa' || (!stored && prefersFa)) location.replace(fa);
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#about">{s.skip}</a>
+    <Nav lang={lang} />
+    <main>
+      <slot />
+    </main>
+    <footer class="foot">
+      <div class="wrap">{s.footer}</div>
+    </footer>
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+---
+import SectionHead from './SectionHead.astro';
+import { softSkills } from '../content/soft-skills';
+import { pick, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<section id="soft-skills" class="section" data-section data-revealed="false" aria-labelledby="style-title">
+  <div class="wrap">
+    <SectionHead id="style-title" command="journalctl -u working-style" title={strings[lang].style.title} />
+    <ul class="traits">
+      {
+        softSkills.map((s, i) => (
+          <li class="trait" data-r style={`--i:${i + 1}`}>
+            <span class="num ltr" aria-hidden="true">0{i + 1}</span>
+            <h3>{pick(s.title, lang)}</h3>
+            <p class="prose">{pick(s.text, lang)}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

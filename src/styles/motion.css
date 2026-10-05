@@ -1,0 +1,97 @@
+/*
+ * Section reveal. Everything is visible by default (no JS, no problem).
+ * When the layout's inline script adds `js` to <html>, items wait for their section to be
+ * revealed (data-revealed="true", set by reveal.ts when the section is near the viewport).
+ * Only opacity and transform animate, so nothing shifts the layout.
+ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+[data-r] { --step: 70ms; }
+.hero [data-r] { --step: 130ms; }
+.skills [data-r] { --step: 45ms; }
+
+html.js [data-section][data-revealed='false'] [data-r] { opacity: 0; transform: translateY(10px); }
+html.js [data-section][data-revealed='true'] [data-r] {
+  animation: rise var(--t-slow) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--step));
+}
+
+.cursor { animation: blink 1.1s steps(1) infinite; }
+html.js [data-section][data-revealed='false'] .cursor { animation: none; }
+
+/* hover / focus / press feedback is defined next to each component; durations come from tokens */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  html.js [data-section] [data-r] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .cursor { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
+/* ---------- skills ribbon: flows left to right across the middle of the page ---------- */
+.strip-wrap { overflow: hidden; padding-block: 5rem; margin-block: -2rem; }
+.strip {
+  display: flex;
+  overflow: hidden;
+  transform: rotate(-3deg);
+  width: 108%;
+  margin-inline: -4%;
+  direction: ltr;
+  padding-block: var(--s-4);
+  border-block: 2px solid var(--text-strong);
+  background: var(--surface);
+}
+.strip-track {
+  display: flex;
+  flex: none;
+  min-width: 100%;
+  gap: var(--s-5);
+  padding-inline-end: var(--s-5);
+  animation: flow-right 38s linear infinite;
+}
+.strip:hover .strip-track { animation-play-state: paused; }
+.strip li {
+  flex: none;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--c);
+  white-space: nowrap;
+}
+.strip li::before { content: '✦'; margin-inline-end: var(--s-5); color: var(--brand); }
+/* two identical tracks, each shifted by its own width: seamless left-to-right loop */
+@keyframes flow-right {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* ---------- extra life ---------- */
+@keyframes bob {
+  50% { transform: rotate(-6deg) translateY(-4px); }
+}
+@keyframes float {
+  50% { transform: rotate(1.5deg) translateY(-6px); }
+}
+.sticker { animation: bob 3s ease-in-out infinite; }
+.hero-card { animation: float 6s ease-in-out infinite; }
+.group { transition: transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out); }
+.group:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--border-strong); }
+.commit { transition: transform var(--t-base) var(--ease-out); }
+.commit:hover { transform: translateX(6px); }
+[dir='rtl'] .commit:hover { transform: translateX(-6px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .strip { overflow-x: auto; }
+  .strip-track { animation: none; }
+  .strip-track + .strip-track { display: none; }
+  .sticker, .hero-card { animation: none; }
+}

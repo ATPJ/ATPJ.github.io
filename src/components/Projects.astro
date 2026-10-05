@@ -1,0 +1,56 @@
+---
+import SectionHead from './SectionHead.astro';
+import { projects } from '../content/projects';
+import { skillGroups } from '../content/skills';
+import { pick, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = strings[lang];
+
+// stack tags borrow the color of the same technology in the skills section
+const categoryOf = new Map(skillGroups.flatMap((g) => g.items.map((i) => [i.name.en, i.category] as const)));
+---
+
+<section id="projects" class="section" data-section data-revealed="false" aria-labelledby="projects-title">
+  <div class="wrap">
+    <SectionHead id="projects-title" command="git log --graph" title={s.projects.title} />
+
+    <ol class="gitlog">
+      {
+        projects.map((p, i) => (
+          <li class={`commit ${p.kind}`} data-r style={`--i:${i + 1}`}>
+            <h3>
+              {p.url ? <a href={p.url}>{pick(p.title, lang)}</a> : pick(p.title, lang)}
+            </h3>
+            <span class="kind">{p.kind === 'verified' ? s.projects.verified : s.projects.general}</span>
+            <p class="summary">{pick(p.summary, lang)}</p>
+
+            {p.stack && (
+              <>
+                <p class="stack-label">{s.projects.stack}</p>
+                <ul class="tags">
+                  {p.stack.map((t) => (
+                    <li class="ltr" style={categoryOf.has(t) ? `--c:var(--c-${categoryOf.get(t)})` : undefined}>{t}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {p.contributions && (
+              <ul class="contrib">
+                {p.contributions.map((c) => (
+                  <li>
+                    <span>{pick(c, lang)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

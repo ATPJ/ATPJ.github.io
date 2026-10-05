@@ -1,0 +1,64 @@
+---
+import SectionHead from './SectionHead.astro';
+import { skillGroups } from '../content/skills';
+import { categories } from '../content/schema';
+import { pick, strings, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = strings[lang];
+
+// one running counter so the whole list fills in row by row (capped to keep it short)
+let n = 0;
+const next = () => Math.min(++n, 24);
+---
+
+<section id="skills" class="section skills" data-section data-revealed="false" aria-labelledby="skills-title">
+  <div class="wrap">
+    <SectionHead id="skills-title" command="docker ps" title={s.skills.title} />
+
+    <ul class="legend" data-r style="--i:1" aria-label={s.skills.legend}>
+      {
+        categories.map((c) => (
+          <li style={`--c:var(--c-${c})`}>
+            <span class="dot" aria-hidden="true" />
+            {s.categories[c]}
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="groups">
+      {
+        skillGroups.map((g) => (
+          <article class="group" data-r style={`--i:${next()}`}>
+            <h3>{pick(g.title, lang)}</h3>
+            <p class="summary">{pick(g.summary, lang)}</p>
+            <table>
+              <caption class="sr-only">{pick(g.title, lang)}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{s.skills.name}</th>
+                  <th scope="col">{s.skills.category}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {g.items.map((it) => (
+                  <tr data-r style={`--i:${next()}`}>
+                    <td style={`--c:var(--c-${it.category})`}>
+                      <span class="dot" aria-hidden="true" />
+                      <span class="ltr">{pick(it.name, lang)}</span>
+                    </td>
+                    <td class="cat" style={`--c:var(--c-${it.category})`}>{s.categories[it.category]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

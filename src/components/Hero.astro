@@ -1,0 +1,64 @@
+---
+import TerminalWindow from './TerminalWindow.astro';
+import { profile } from '../content/profile';
+import { pick, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Illustrative deploy log. Every line describes something the developer really does
+// (Git deploys, Docker, Nginx reverse proxy, Cloudflare origin certificate and CDN).
+// It is decoration for assistive tech (aria-hidden); the identity block below is the real content.
+const lines = [
+  { cmd: 'git pull origin main' },
+  { out: 'source synced from the repository' },
+  { cmd: 'docker compose up -d --build' },
+  { out: 'containers built and running' },
+  { cmd: 'nginx -t && systemctl reload nginx' },
+  { out: 'reverse proxy config is valid' },
+  { out: 'tls: cloudflare origin certificate' },
+  { out: 'traffic proxied through cloudflare cdn' },
+  { cmd: 'whoami' },
+];
+---
+
+<section id="hero" class="hero" data-section data-revealed="false" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div class="whoami" data-r style="--i:0">
+      <p class="snippet ltr" aria-hidden="true"><span class="kw">fn</span> main() &#123; <span class="fn">build</span>(); <span class="fn">automate</span>(); <span class="fn">ship</span>(); &#125;</p>
+      <h1 id="hero-title" class="wordmark" data-text={profile.handle}>{profile.handle}</h1>
+      <p class="role">{pick(profile.role, lang)}</p>
+      <p class="tagline prose">{pick(profile.tagline, lang)}</p>
+      <a class="cta" href="#projects">{lang === 'fa' ? 'پروژه‌ها ←' : 'see the work →'}</a>
+    </div>
+    <div class="hero-card" data-r style="--i:1">
+      <span class="sticker" aria-hidden="true">LLM + Docker</span>
+      <TerminalWindow title="atpj@portfolio:~/deploy">
+        <ol class="log ltr" aria-hidden="true">
+          {
+            lines.map((l) => (
+              <li>
+                {'cmd' in l ? (
+                  <>
+                    <span class="ps1">$</span>
+                    <span class="cmd-line">{l.cmd}</span>
+                  </>
+                ) : (
+                  <>
+                    <span class="tag">
+                      <span class="ok">ok</span>
+                    </span>
+                    <span class="out">{l.out}</span>
+                  </>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+        <p class="prompt-line ltr" aria-hidden="true"><span class="ps1">$</span><span class="cursor"></span></p>
+      </TerminalWindow>
+    </div>
+  </div>
+</section>
